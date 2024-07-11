@@ -1,1 +1,15 @@
-<p>category-details works!</p>
+<div class="form-group">
+  <h2>Create Category Details</h2>
+  <div class="form-control">
+    <label for="name">Name:</label>
+    <input type="text" id="name" [(ngModel)]="newCategoryDetail.name">
+  </div>
+  <button (click)="createCategoryDetails()">Create</button>
+</div>
+
+<div class="form-group">
+  <h2>Category Details List</h2>
+  <ul>
+    <li *ngFor="let detail of categoryDetailsList">{{ detail.name }}</li>
+  </ul>
+</div>

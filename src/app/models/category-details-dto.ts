@@ -1,10 +1,10 @@
 export class CategoryDetailsDto {
-  id: number;
+  id: number | null;
   name: string;
   categoryList: number[];
 
   constructor() {
-    this.id = 0;
+    this.id = null;
     this.name = '';
     this.categoryList = [];
   }

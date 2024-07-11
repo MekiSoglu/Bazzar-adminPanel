@@ -7,33 +7,31 @@ import { CategoryDetailsDto } from '../models/category-details-dto';
   providedIn: 'root'
 })
 export class CategoryDetailsService {
-  private baseUrl = 'http://localhost:4444/catDetails';
+  private baseUrl = 'http://localhost:80/catDetails';
 
-  constructor(private httpClient: HttpClient) { }
-
-  getCategoryDetails(id: number): Observable<CategoryDetailsDto> {
-    const url = `${this.baseUrl}/${id}`;
-    return this.httpClient.get<CategoryDetailsDto>(url);
-  }
+  constructor(private http: HttpClient) { }
 
   getAllCategoryDetails(): Observable<CategoryDetailsDto[]> {
-    return this.httpClient.get<CategoryDetailsDto[]>(this.baseUrl);
+    return this.http.get<CategoryDetailsDto[]>(`${this.baseUrl}/dto`);
   }
 
-  createCategoryDetails(categoryDetails: CategoryDetailsDto): Observable<void> {
-    return this.httpClient.post<void>(this.baseUrl, categoryDetails);
+  getCategoryDetails(id: number): Observable<CategoryDetailsDto> {
+    return this.http.get<CategoryDetailsDto>(`${this.baseUrl}/${id}`);
   }
 
-  updateCategoryDetails(categoryDetails: CategoryDetailsDto): Observable<void> {
-    return this.httpClient.put<void>(this.baseUrl, categoryDetails);
+  createCategoryDetails(categoryDetails: CategoryDetailsDto): Observable<CategoryDetailsDto> {
+    return this.http.post<CategoryDetailsDto>(`${this.baseUrl}`, categoryDetails);
   }
 
-  deleteCategoryDetails(id: number): Observable<void> {
-    const url = `${this.baseUrl}/${id}`;
-    return this.httpClient.delete<void>(url);
+  updateCategoryDetails(categoryDetails: CategoryDetailsDto): Observable<any> {
+    return this.http.put(`${this.baseUrl}`, categoryDetails);
   }
 
-  deleteAllCategoryDetails(): Observable<void> {
-    return this.httpClient.delete<void>(this.baseUrl);
+  deleteCategoryDetails(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/${id}`);
+  }
+
+  deleteAllCategoryDetails(): Observable<any> {
+    return this.http.delete(`${this.baseUrl}`);
   }
 }

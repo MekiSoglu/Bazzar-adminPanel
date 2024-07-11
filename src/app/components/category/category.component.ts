@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {CategoryDto} from "../../models/category-dto";
-import {CategoryService} from "../../services/category.service";
-
+import { CategoryDto } from "../../models/category-dto";
+import { CategoryService } from "../../services/category.service";
+import { CategoryDetailsDto } from '../../models/category-details-dto';
+import { CategoryDetailsService } from '../../services/category-details.service';
 
 @Component({
   selector: 'app-category',
@@ -11,12 +12,21 @@ import {CategoryService} from "../../services/category.service";
 export class CategoryComponent implements OnInit {
 
   categories: CategoryDto[] = [];
+  categoryDetailsList: CategoryDetailsDto[] = [];
   selectedCategory: CategoryDto = new CategoryDto();
+  selectedCategoryDetails: CategoryDetailsDto = new CategoryDetailsDto();
+  categoryDetailsIds: number[] = [];
+  selectedCategoryId: number | null = null;
+  selectedCategoryDetailIds: number[] = [];
 
-  constructor(private categoryService: CategoryService) { }
+  constructor(
+    private categoryService: CategoryService,
+    private categoryDetailsService: CategoryDetailsService
+  ) { }
 
   ngOnInit(): void {
     this.getAllCategories();
+    this.getAllCategoryDetails();
   }
 
   getAllCategories(): void {
@@ -25,33 +35,37 @@ export class CategoryComponent implements OnInit {
     );
   }
 
-  getCategory(id: number): void {
-    this.categoryService.getCategory(id).subscribe(
-      data => this.selectedCategory = data
+  getAllCategoryDetails(): void {
+    this.categoryDetailsService.getAllCategoryDetails().subscribe(
+      data => this.categoryDetailsList = data
     );
   }
 
-  createCategory(): void {
-    this.categoryService.createCategory(this.selectedCategory).subscribe(
-      () => this.getAllCategories()
-    );
+  addCategoryDetail(id: number | null): void {
+    if (id !== null && !this.selectedCategoryDetailIds.includes(id)) {
+      this.selectedCategoryDetailIds.push(id);
+    }
   }
 
-  updateCategory(): void {
-    this.categoryService.updateCategory(this.selectedCategory).subscribe(
-      () => this.getAllCategories()
-    );
+  getDetailNameById(id: number): string {
+    const detail = this.categoryDetailsList.find(detail => detail.id === id);
+    return detail ? detail.name : 'Unknown Detail';
   }
 
-  deleteCategory(id: number): void {
-    this.categoryService.deleteCategory(id).subscribe(
-      () => this.getAllCategories()
-    );
-  }
+  saveCategory(): void {
+    const categoryData = {
+      parent_id: this.selectedCategoryId,
+      categoryName: this.selectedCategory.categoryName,
+      categoryDetailsId: this.selectedCategoryDetailIds
+    };
 
-  deleteAllCategories(): void {
-    this.categoryService.deleteAllCategories().subscribe(
-      () => this.getAllCategories()
+    this.categoryService.createCategory(categoryData).subscribe(
+      () => {
+        this.getAllCategories();
+        this.selectedCategory = new CategoryDto(); // Alanı sıfırlayın
+        this.selectedCategoryDetailIds = []; // Listeyi sıfırlayın
+        this.selectedCategoryId = null;
+      }
     );
   }
 }

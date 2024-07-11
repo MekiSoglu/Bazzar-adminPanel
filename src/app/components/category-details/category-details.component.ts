@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {CategoryDetailsDto} from "../../models/category-details-dto";
-import {CategoryDetailsService} from "../../services/category-details.service.spec";
-;
+import { CategoryDetailsDto } from "../../models/category-details-dto";
+import { CategoryDetailsService } from "../../services/category-details.service";
 
 @Component({
   selector: 'app-category-details',
@@ -11,7 +10,7 @@ import {CategoryDetailsService} from "../../services/category-details.service.sp
 export class CategoryDetailsComponent implements OnInit {
 
   categoryDetailsList: CategoryDetailsDto[] = [];
-  selectedCategoryDetails: CategoryDetailsDto = new CategoryDetailsDto();
+  newCategoryDetail: CategoryDetailsDto = new CategoryDetailsDto();
 
   constructor(private categoryDetailsService: CategoryDetailsService) { }
 
@@ -25,33 +24,12 @@ export class CategoryDetailsComponent implements OnInit {
     );
   }
 
-  getCategoryDetails(id: number): void {
-    this.categoryDetailsService.getCategoryDetails(id).subscribe(
-      data => this.selectedCategoryDetails = data
-    );
-  }
-
   createCategoryDetails(): void {
-    this.categoryDetailsService.createCategoryDetails(this.selectedCategoryDetails).subscribe(
-      () => this.getAllCategoryDetails()
-    );
-  }
-
-  updateCategoryDetails(): void {
-    this.categoryDetailsService.updateCategoryDetails(this.selectedCategoryDetails).subscribe(
-      () => this.getAllCategoryDetails()
-    );
-  }
-
-  deleteCategoryDetails(id: number): void {
-    this.categoryDetailsService.deleteCategoryDetails(id).subscribe(
-      () => this.getAllCategoryDetails()
-    );
-  }
-
-  deleteAllCategoryDetails(): void {
-    this.categoryDetailsService.deleteAllCategoryDetails().subscribe(
-      () => this.getAllCategoryDetails()
+    this.categoryDetailsService.createCategoryDetails(this.newCategoryDetail).subscribe(
+      () => {
+        this.getAllCategoryDetails();
+        this.newCategoryDetail = new CategoryDetailsDto(); // Alanı sıfırlayın
+      }
     );
   }
 }

@@ -1,5 +1,5 @@
 export class CategoryDto {
-  id: number;
+    id: number | null;
   parent_id: number;
   categoryName: string;
   product_Id: Set<number>;
@@ -7,7 +7,7 @@ export class CategoryDto {
   version: number;
 
   constructor() {
-    this.id = 0;
+    this.id = null;
     this.parent_id = 0;
     this.categoryName = '';
     this.product_Id = new Set<number>();
