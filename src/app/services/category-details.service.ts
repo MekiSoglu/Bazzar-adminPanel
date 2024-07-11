@@ -7,7 +7,7 @@ import { CategoryDetailsDto } from '../models/category-details-dto';
   providedIn: 'root'
 })
 export class CategoryDetailsService {
-  private baseUrl = 'http://localhost:80/catDetails';
+  private baseUrl = 'http://localhost:4444/catDetails';
 
   constructor(private http: HttpClient) { }
 

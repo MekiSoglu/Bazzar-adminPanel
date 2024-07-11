@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CategoryDto } from '../models/category-dto';
+import { CategoryDetailsDto } from '../models/category-details-dto';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
-  private baseUrl = 'http://localhost:80/category';
+  private baseUrl = 'http://localhost:4444/category';
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +20,11 @@ export class CategoryService {
     return this.http.get<CategoryDto>(`${this.baseUrl}/${id}`);
   }
 
-  createCategory(category: any): Observable<any> { // 'any' olarak değiştirildi
+  getDetails(id: number): Observable<CategoryDetailsDto[]> {
+    return this.http.get<CategoryDetailsDto[]>(`${this.baseUrl}/details/${id}`);
+  }
+
+  createCategory(category: any): Observable<any> {
     return this.http.post(`${this.baseUrl}`, category);
   }
 
