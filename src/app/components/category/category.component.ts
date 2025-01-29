@@ -29,17 +29,22 @@ export class CategoryComponent implements OnInit {
     this.getAllCategoryDetails();
   }
 
+  ngAfterViewInit(): void {
+  console.log("ngAfterViewInit - Category Details List:", this.categoryDetailsList);
+}
+
   getAllCategories(): void {
     this.categoryService.getAllCategories().subscribe(
       data => this.categories = data
     );
   }
 
-  getAllCategoryDetails(): void {
-    this.categoryDetailsService.getAllCategoryDetails().subscribe(
-      data => this.categoryDetailsList = data
-    );
-  }
+ getAllCategoryDetails(): void {
+  this.categoryDetailsService.getAllCategoryDetails().subscribe(data => {
+    this.categoryDetailsList = data;
+    console.log("Kategori detayları yüklendi:", this.categoryDetailsList);
+  });
+}
 
   addCategoryDetail(id: number | null): void {
     if (id !== null && !this.selectedCategoryDetailIds.includes(id)) {
@@ -47,25 +52,39 @@ export class CategoryComponent implements OnInit {
     }
   }
 
-  getDetailNameById(id: number): string {
-    const detail = this.categoryDetailsList.find(detail => detail.id === id);
-    return detail ? detail.name : 'Unknown Detail';
-  }
+getDetailNameById(id: number): string {
+  console.log("details.id:", id);
 
-  saveCategory(): void {
-    const categoryData = {
-      parent_id: this.selectedCategoryId,
-      categoryName: this.selectedCategory.categoryName,
-      categoryDetailsId: this.selectedCategoryDetailIds
-    };
+  const detail = this.categoryDetailsList.find(detail => Number(detail.id) === Number(id));
 
-    this.categoryService.createCategory(categoryData).subscribe(
-      () => {
-        this.getAllCategories();
-        this.selectedCategory = new CategoryDto(); // Alanı sıfırlayın
-        this.selectedCategoryDetailIds = []; // Listeyi sıfırlayın
-        this.selectedCategoryId = null;
-      }
-    );
-  }
+
+  return detail ? detail.name : 'Unknown Detail';
+}
+
+saveCategory(): void {
+  console.log("parent_id", this.selectedCategoryId);
+console.log("Seçili Category Detail Id'leri:", this.selectedCategoryDetailIds);
+
+const categoryDetailsList = this.selectedCategoryDetailIds.map(id => {
+    return { id: Number(id) } as CategoryDetailsDto;
+  });
+
+  console.log("categorydetaisl:"+categoryDetailsList)
+
+  const categoryData = {
+    parentId: this.selectedCategoryId,
+    categoryName: this.selectedCategory.categoryName,
+    categoryDetailsList: categoryDetailsList  // Backend'in beklediği nesne listesi
+  };
+
+  this.categoryService.createCategory(categoryData).subscribe(
+    () => {
+      this.getAllCategories();
+      this.selectedCategory = new CategoryDto(); // Alanı sıfırla
+      this.selectedCategoryDetailIds = []; // Listeyi sıfırla
+      this.selectedCategoryId = null;
+    }
+  );
+}
+
 }

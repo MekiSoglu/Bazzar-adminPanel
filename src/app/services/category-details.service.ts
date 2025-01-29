@@ -7,12 +7,12 @@ import { CategoryDetailsDto } from '../models/category-details-dto';
   providedIn: 'root'
 })
 export class CategoryDetailsService {
-  private baseUrl = 'http://localhost:4444/catDetails';
+  private baseUrl = 'http://localhost:80/catDetails';
 
   constructor(private http: HttpClient) { }
 
   getAllCategoryDetails(): Observable<CategoryDetailsDto[]> {
-    return this.http.get<CategoryDetailsDto[]>(`${this.baseUrl}/dto`);
+    return this.http.get<CategoryDetailsDto[]>(`${this.baseUrl}/all`);
   }
 
   getCategoryDetails(id: number): Observable<CategoryDetailsDto> {

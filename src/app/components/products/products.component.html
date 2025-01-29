@@ -3,9 +3,10 @@
   <form (ngSubmit)="saveProduct()">
     <div class="form-control">
       <label for="category">Category:</label>
-      <select id="category" [(ngModel)]="product.category_id" name="category" required>
-        <option *ngFor="let category of categories" [value]="category.id">{{ category.categoryName }}</option>
-      </select>
+<select id="category" [(ngModel)]="product.category_id" name="category" required>
+  <option *ngFor="let category of categories" [value]="category?.id">{{ category?.categoryName }}</option>
+</select>
+
     </div>
 
     <div class="form-control">
@@ -35,10 +36,12 @@
       </select>
     </div>
 
-    <div *ngFor="let detail of productDetails; let i = index" class="form-control">
-      <label for="detail-{{i}}">{{ categoryDetails[i]?.name }}:</label>
-      <input id="detail-{{i}}" [(ngModel)]="detail.value" name="detail-{{i}}" />
-    </div>
+<div *ngFor="let detail of productDetails; let i = index" class="form-control">
+  <label *ngIf="categoryDetails[i]" for="detail-{{i}}">
+    {{ categoryDetails[i]?.name }}
+  </label>
+  <input id="detail-{{i}}" [(ngModel)]="detail.value" name="detail-{{i}}" />
+</div>
 
     <button (click)="saveProductDetails()">Save Details</button>
   </div>

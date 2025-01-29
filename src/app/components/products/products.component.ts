@@ -7,6 +7,7 @@ import { ProductDetailsService } from '../../services/product-details.service';
 import { CategoryDetailsDto } from '../../models/category-details-dto';
 import { ProductDto } from '../../models/products-dto';
 import {ProductDetailsDto} from "../../models/products-details-dto";
+import {catchError, of} from "rxjs";
 
 @Component({
   selector: 'app-products',
@@ -32,17 +33,36 @@ export class ProductsComponent implements OnInit {
     this.loadProducts();
   }
 
-  loadCategories(): void {
-    this.categoryService.getAllCategories().subscribe(data => {
+loadCategories(): void {
+  this.categoryService.getAllCategories().pipe(
+    catchError((error) => {
+      console.error('Error in getAllCategories:', error);
+      return of([]); // Hata durumunda boş bir dizi döndür
+    })
+  ).subscribe((data) => {
+    console.log('Category API Response:', data); // API'den dönen veriyi ekrana yazdır
+    if (Array.isArray(data)) {
       this.categories = data;
-    });
-  }
+    } else {
+      console.error('API yanıtı bir dizi değil:', data);
+      this.categories = []; // Yanıt beklenen formatta değilse boş dizi ata
+    }
+  });
+}
 
-  loadProducts(): void {
-    this.productsService.getAllProducts().subscribe(data => {
-      this.products = data;
-    });
-  }
+
+
+loadProducts(): void {
+  this.productsService.getAllProducts().pipe(
+    catchError((error) => {
+      console.error('Error in getAllProducts:', error);
+      return of([]); // Hata durumunda boş bir dizi döndür
+    })
+  ).subscribe((data) => {
+    this.products = data;
+  });
+}
+
 
   onProductChange(event: Event): void {
     const target = event.target as HTMLSelectElement;
@@ -57,18 +77,23 @@ export class ProductsComponent implements OnInit {
     }
   }
 
-  loadCategoryDetails(categoryId: number): void {
-    this.categoryService.getDetails(categoryId).subscribe(data => {
-      this.categoryDetails = data;
-      this.productDetails = this.categoryDetails.map(detail => {
-        const pd = new ProductDetailsDto();
-        pd.categoryDetailsId = detail.id !== null ? detail.id : 0; // Null kontrolü
-        pd.productId = this.product.id !== undefined ? this.product.id : 0; // Undefined kontrolü
-        return pd;
-      });
+loadCategoryDetails(categoryId: number): void {
+  this.categoryService.getDetails(categoryId).pipe(
+    catchError((error) => {
+      console.error('Error in loadCategoryDetails:', error);
+      return of([]);
+    })
+  ).subscribe(data => {
+    console.log('Category Details:', data);
+    this.categoryDetails = data;
+    this.productDetails = this.categoryDetails.map(detail => {
+      const pd = new ProductDetailsDto();
+      pd.categoryDetailsId = detail.id || 0; // Null kontrolü
+      pd.productId = this.product.id || 0; // Undefined kontrolü
+      return pd;
     });
-  }
-
+  });
+}
   saveProduct(): void {
     this.productsService.createProduct(this.product).subscribe(response => {
       console.log('Product saved successfully!');

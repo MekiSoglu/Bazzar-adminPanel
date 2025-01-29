@@ -7,12 +7,12 @@ import {ProductDto} from "../models/products-dto";
   providedIn: 'root'
 })
 export class ProductsService {
-  private baseUrl = 'http://localhost:4444/products';
+  private baseUrl = 'http://localhost:80/products';
 
   constructor(private http: HttpClient) { }
 
   getAllProducts(): Observable<ProductDto[]> {
-    return this.http.get<ProductDto[]>(`${this.baseUrl}/getProducts`);
+    return this.http.get<ProductDto[]>(`${this.baseUrl}`);
   }
 
   getProduct(id: number): Observable<ProductDto> {
@@ -20,7 +20,7 @@ export class ProductsService {
   }
 
   createProduct(product: ProductDto): Observable<any> {
-    return this.http.post(`${this.baseUrl}`, product);
+    return this.http.post(`http://localhost:80/products`, product);
   }
 
   updateProduct(product: ProductDto): Observable<any> {
