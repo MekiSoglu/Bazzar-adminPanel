@@ -3,7 +3,7 @@
   <form (ngSubmit)="saveProduct()">
     <div class="form-control">
       <label for="category">Category:</label>
-<select id="category" [(ngModel)]="product.category_id" name="category" required>
+<select id="category" [(ngModel)]="product.categoryId" name="category" required>
   <option *ngFor="let category of categories" [value]="category?.id">{{ category?.categoryName }}</option>
 </select>
 

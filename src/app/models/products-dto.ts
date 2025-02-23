@@ -1,6 +1,6 @@
 export class ProductDto {
   id?: number;
-  category_id?: number;
+  categoryId?: number;
   name?: string;
   unitPrice?: number;
   description?: string;

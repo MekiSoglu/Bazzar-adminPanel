@@ -1,15 +1,22 @@
-<div class="form-group">
-  <h2>Create Category Details</h2>
-  <div class="form-control">
-    <label for="name">Name:</label>
-    <input type="text" id="name" [(ngModel)]="newCategoryDetail.name">
-  </div>
-  <button (click)="createCategoryDetails()">Create</button>
-</div>
+<div class="category-details-wrapper">
+  <div class="category-details-container">
+    <h2>📝 Create Category Details</h2>
 
-<div class="form-group">
-  <h2>Category Details List</h2>
-  <ul>
-    <li *ngFor="let detail of categoryDetailsList">{{ detail.name }}</li>
-  </ul>
+    <!-- ✅ Kategori Detayı Ekleme -->
+    <div class="form-control">
+      <label for="name">Detail Name:</label>
+      <input type="text" id="name" [(ngModel)]="newCategoryDetail.name" placeholder="Enter detail name">
+    </div>
+    <button class="create-btn" (click)="createCategoryDetails()">✅ Add Detail</button>
+  </div>
+
+  <div class="category-list-container">
+    <h2>📋 Category Details List</h2>
+    <ul class="detail-list">
+      <li *ngFor="let detail of categoryDetailsList">
+        {{ detail.name }}
+        <span class="delete-btn" (click)="removeDetail(detail.id)">❌</span>
+      </li>
+    </ul>
+  </div>
 </div>

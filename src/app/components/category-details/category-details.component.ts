@@ -32,4 +32,8 @@ export class CategoryDetailsComponent implements OnInit {
       }
     );
   }
+
+  removeDetail(id: number | null) {
+    
+  }
 }

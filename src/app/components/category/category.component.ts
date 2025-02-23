@@ -87,4 +87,7 @@ const categoryDetailsList = this.selectedCategoryDetailIds.map(id => {
   );
 }
 
+  removeCategoryDetail(id: number) {
+    
+  }
 }

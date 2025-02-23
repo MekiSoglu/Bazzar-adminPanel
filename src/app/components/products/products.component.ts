@@ -30,27 +30,13 @@ export class ProductsComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadCategories();
-    this.loadProducts();
   }
 
-loadCategories(): void {
-  this.categoryService.getAllCategories().pipe(
-    catchError((error) => {
-      console.error('Error in getAllCategories:', error);
-      return of([]); // Hata durumunda boş bir dizi döndür
-    })
-  ).subscribe((data) => {
-    console.log('Category API Response:', data); // API'den dönen veriyi ekrana yazdır
-    if (Array.isArray(data)) {
+  loadCategories(): void {
+    this.categoryService.getAllCategories().subscribe(data => {
       this.categories = data;
-    } else {
-      console.error('API yanıtı bir dizi değil:', data);
-      this.categories = []; // Yanıt beklenen formatta değilse boş dizi ata
-    }
-  });
-}
-
-
+    });
+  }
 
 loadProducts(): void {
   this.productsService.getAllProducts().pipe(
@@ -70,8 +56,9 @@ loadProducts(): void {
     if (productId) {
       this.productsService.getProduct(productId).subscribe(product => {
         this.product = product;
-        if (product.category_id) {
-          this.loadCategoryDetails(product.category_id);
+        if (product.categoryId) {
+          console.log(product.categoryId)
+        //  this.loadCategoryDetails(product.category_id);
         }
       });
     }
@@ -95,19 +82,33 @@ loadCategoryDetails(categoryId: number): void {
   });
 }
   saveProduct(): void {
-    this.productsService.createProduct(this.product).subscribe(response => {
-      console.log('Product saved successfully!');
-      if (this.product.category_id !== undefined) {
-        this.loadCategoryDetails(this.product.category_id);
-      }
-    });
+  this.productsService.createProduct(this.product).subscribe(response => {
+    console.log('Product saved successfully!', response);
+
+    // Backend'den dönen yanıt içinde `id` varsa `product.id`'ye atayalım
+    if (response && response.id) {
+      this.product.id = response.id;
+    }
+
+    // Kategori id boş değilse, ilgili detayları yükleyelim
+    if (this.product.categoryId !== undefined) {
+      this.loadCategoryDetails(this.product.categoryId);
+    }
+  });
+}
+
+ saveProductDetails(): void {
+  if (!this.product.id) {
+    console.error("Hata: Ürün kaydedilmeden detaylar eklenemez!");
+    return;
   }
 
-  saveProductDetails(): void {
-    this.productDetails.forEach(detail => {
-      this.productDetailsService.createProductDetails(detail).subscribe(response => {
-        console.log('Product detail saved successfully!');
-      });
+  this.productDetails.forEach(detail => {
+    detail.productId = this.product.id; // Yeni eklenen ürünün ID'sini burada kullan
+
+    this.productDetailsService.createProductDetails(detail).subscribe(response => {
+      console.log('Product detail saved successfully!', response);
     });
-  }
+  });
+}
 }

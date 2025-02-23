@@ -1,17 +1,15 @@
 export class CategoryDto {
-    id: number | null;
-  parent_id: number;
+  id: number;
+  parentId: number | null; // `parent_id` yerine `parentId` kullanılıyor
   categoryName: string;
-  product_Id: Set<number>;
-  categoryDetailsId: number[];
+  categoryDetailsList: number[]; // API'de categoryDetailsList olarak geliyor
   version: number;
 
   constructor() {
-    this.id = null;
-    this.parent_id = 0;
+    this.id = 0;
+    this.parentId = null; // parentId'yi null olarak başlat
     this.categoryName = '';
-    this.product_Id = new Set<number>();
-    this.categoryDetailsId = [];
+    this.categoryDetailsList = [];
     this.version = 0;
   }
 }

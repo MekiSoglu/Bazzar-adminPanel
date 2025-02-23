@@ -20,8 +20,13 @@ export class ProductsService {
   }
 
   createProduct(product: ProductDto): Observable<any> {
-    return this.http.post(`http://localhost:80/products`, product);
-  }
+  console.log("createproduct::", JSON.stringify(product, null, 2));
+  return this.http.post(`http://localhost:80/products`, product);
+ }
+
+ getProductAndDetails(id : number): Observable<any>{
+    return this.http.get<any>(`${this.baseUrl}/productAndDetail/${id}`)
+ }
 
   updateProduct(product: ProductDto): Observable<any> {
     return this.http.put(`${this.baseUrl}`, product);

@@ -1,17 +1,83 @@
 <div class="container">
   <div class="sidebar">
     <ul>
-      <li (click)="selectHome()" [class.active]="selectedTab === 'home'">Home</li>
-      <li (click)="selectCategory()" [class.active]="selectedTab === 'category'">Category</li>
-      <ul *ngIf="showCategorySubmenu">
-        <li (click)="selectCreateCategory()" [class.active]="selectedTab === 'createCategory'">Create Category</li>
-        <li (click)="selectCreateDetails()" [class.active]="selectedTab === 'createDetails'">Create Details</li>
+      <li (click)="selectHome()" [class.active]="selectedTab === 'home'">🏠 Home</li>
+
+      <li (click)="selectCategory()" [class.active]="selectedTab === 'category'">
+        📁 Category <span class="arrow" [class.rotate]="showCategorySubmenu">▶</span>
+      </li>
+      <ul class="submenu" *ngIf="showCategorySubmenu">
+        <li (click)="selectCreateCategory()" [class.active]="selectedTab === 'createCategory'">➕ Create Category</li>
+        <li (click)="selectCreateDetails()" [class.active]="selectedTab === 'createDetails'">📄 Create Details</li>
       </ul>
-      <li (click)="selectProduct()" [class.active]="selectedTab === 'product'">Product</li>
-      <li (click)="selectOrder()" [class.active]="selectedTab === 'order'">Orders</li>
+
+      <li (click)="selectProduct()" [class.active]="selectedTab === 'product'">🛒 Product</li>
+      <li (click)="selectOrder()" [class.active]="selectedTab === 'order'">📦 Orders</li>
+
+      <li (click)="selectArac()" [class.active]="selectedTab === 'arac'">
+        🚗 Arac <span class="arrow" [class.rotate]="showCategories">▶</span>
+      </li>
+      <ul class="submenu" *ngIf="showCategories">
+        <ng-container *ngFor="let category of activeCategories">
+          <li (click)="toggleCategory(category.id)">
+            {{ category.categoryName }}
+            <span *ngIf="getChildCategories(category.id).length > 0" class="arrow">▶</span>
+          </li>
+          <ul class="submenu" *ngIf="expandedCategories.has(category.id)">
+            <ng-container *ngFor="let subCategory of getChildCategories(category.id)">
+              <li (click)="toggleCategory(subCategory.id)">🚜 {{ subCategory.categoryName }}</li>
+            </ng-container>
+          </ul>
+        </ng-container>
+      </ul>
+
+      <li (click)="selectCreateTable()" [class.active]="selectedTab === 'createTable'">📊 Create Table</li>
+
+      <li (click)="toggleTables()" [class.active]="selectedTab === 'tables'">
+        📋 Tablolarım <span class="arrow" [class.rotate]="showTables">▶</span>
+      </li>
+      <ul class="submenu" *ngIf="showTables">
+        <li *ngFor="let tableName of tableNames" (click)="selectTable(tableName)">📂 {{ tableName }}</li>
+      </ul>
+
+      <!-- ✅ BURAYA "CARI" BUTONUNU DOĞRU KONUMA EKLEDİK -->
+      <li (click)="toggleCari()" [class.active]="selectedTab === 'cari'">
+        🧾 Cari <span class="arrow" [class.rotate]="showCari">▶</span>
+      </li>
+      <ul class="submenu" *ngIf="showCari">
+        <li (click)="selectCreateCari()" [class.active]="selectedTab === 'createCari'">➕ Cari Oluştur</li>
+      </ul>
     </ul>
+
+<li (click)="toggleCarilerim()" [class.active]="selectedTab === 'carilerim'">
+  🗂️ Carilerim <span class="arrow" [class.rotate]="showCarilerim">▶</span>
+</li>
+<ul class="submenu" *ngIf="showCarilerim">
+  <li *ngFor="let cari of cariler" (click)="selectCari(cari)">📂 {{ cari }}</li>
+</ul>
+
+
+<li (click)="selectIslemler()" [class.active]="selectedTab === 'islemler'">➗✖️ İşlem Tanımla</li>
+
+<li (click)="toggleIslemlerim()" [class.active]="selectedTab === 'islemlerim'">
+  ➕🧮 İşlemlerim <span class="arrow" [class.rotate]="showIslemlerim">▶</span>
+</li>
+
+<ul class="submenu" *ngIf="showIslemlerim">
+  <li *ngFor="let islem of islemler" (click)="selectIslem(islem)">
+    🔢 {{ islem }}
+  </li>
+</ul>
+
+
+
+
+
+
   </div>
+
   <div class="content">
     <router-outlet></router-outlet>
+    <app-araclar *ngIf="selectedTab === 'arac'" (categoriesLoaded)="updateCategories($event)"></app-araclar>
   </div>
 </div>

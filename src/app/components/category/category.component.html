@@ -1,24 +1,45 @@
-<div class="form-group">
-  <h2>Create Category</h2>
-  <div class="form-control">
-    <label for="parentId">Parent Id:</label>
-    <select id="parentId" [(ngModel)]="selectedCategoryId">
-      <option *ngFor="let category of categories" [value]="category.id">{{ category.categoryName }}</option>
-    </select>
+<div class="category-wrapper">
+  <div class="category-container">
+    <h2>📂 Create Category</h2>
+
+    <!-- ✅ Parent Kategori Seçimi -->
+    <div class="form-control">
+      <label for="parentId">Parent Category:</label>
+      <select id="parentId" [(ngModel)]="selectedCategoryId">
+        <option *ngFor="let category of categories" [value]="category.id">
+          {{ category.categoryName }}
+        </option>
+      </select>
+    </div>
+
+    <!-- ✅ Kategori İsmi Girişi -->
+    <div class="form-control">
+      <label for="name">Category Name:</label>
+      <input type="text" id="name" [(ngModel)]="selectedCategory.categoryName" placeholder="Enter category name">
+    </div>
+
+    <!-- ✅ Detay Ekleme -->
+    <div class="form-control">
+      <label for="details">Add Details:</label>
+      <div class="detail-selection">
+        <select id="details" [(ngModel)]="selectedCategoryDetails.id">
+          <option *ngFor="let detail of categoryDetailsList" [value]="detail.id">
+            {{ detail.name }}
+          </option>
+        </select>
+        <button class="add-btn" (click)="addCategoryDetail(selectedCategoryDetails.id)">➕ Add</button>
+      </div>
+    </div>
+
+    <!-- ✅ Eklenen Detaylar -->
+    <ul class="detail-list">
+      <li *ngFor="let id of selectedCategoryDetailIds">
+        {{ getDetailNameById(id) }}
+        <span class="delete-btn" (click)="removeCategoryDetail(id)">❌</span>
+      </li>
+    </ul>
+
+    <!-- ✅ Kategori Kaydetme Butonu -->
+    <button class="create-btn" (click)="saveCategory()">✅ Create Category</button>
   </div>
-  <div class="form-control">
-    <label for="name">Name:</label>
-    <input type="text" id="name" [(ngModel)]="selectedCategory.categoryName">
-  </div>
-  <div class="form-control">
-    <label for="details">Add Details:</label>
-    <select id="details" [(ngModel)]="selectedCategoryDetails.id">
-      <option *ngFor="let detail of categoryDetailsList" [value]="detail.id">{{ detail.name }}</option>
-    </select>
-    <button (click)="addCategoryDetail(selectedCategoryDetails.id)">Add Details</button>
-  </div>
-  <ul>
-    <li *ngFor="let id of selectedCategoryDetailIds">{{ getDetailNameById(id) }}</li>
-  </ul>
-  <button (click)="saveCategory()">Create</button>
 </div>

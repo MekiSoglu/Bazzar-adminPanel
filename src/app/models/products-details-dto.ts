@@ -1,6 +1,6 @@
 export class ProductDetailsDto {
   value: string;
-  productId: number;
+  productId: number | undefined;
   categoryDetailsId: number;
 
   constructor() {

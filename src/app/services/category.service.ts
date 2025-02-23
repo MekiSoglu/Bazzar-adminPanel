@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CategoryDto } from '../models/category-dto';
 import { CategoryDetailsDto } from '../models/category-details-dto';
+import {MinCategoryDto} from "../models/minCategory-dto";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class CategoryService {
 
   getAllCategories(): Observable<CategoryDto[]> {
     return this.http.get<CategoryDto[]>(`${this.baseUrl}`);
+  }
+
+  getAllMinCategories(): Observable<MinCategoryDto[]>{
+    return this.http.get<MinCategoryDto[]>(`${this.baseUrl}/minCategory`)
   }
 
   getCategory(id: number): Observable<CategoryDto> {
